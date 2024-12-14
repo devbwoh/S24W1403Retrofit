@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kr.ac.kumoh.ce.s20240000.s24w1403retrofit.ui.theme.S24W1403RetrofitTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,6 +33,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    val viewModel: SongViewModel = viewModel()
+    val songList by viewModel.songList.observeAsState(emptyList())
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val navController = rememberNavController()
 
@@ -41,10 +49,23 @@ fun MainScreen() {
                 SingerList()
             }
             composable(route = SongScreen.Song.name) {
-                SongList()
+                SongList() {
+                    navController.navigate(it) {
+                        launchSingleTop = true
+                        popUpTo(it) { inclusive = true }
+                    }
+                }
             }
-            composable(route = SongScreen.SongDetail.name) {
-                SongDetail()
+            composable(
+                route = SongScreen.SongDetail.name + "/{id}",
+                arguments = listOf(navArgument("id") {
+                    type = NavType.IntType
+                })
+            ) {
+                val id = it.arguments?.getInt("id") ?: -1
+                val song = songList.find { song -> song.id == id }
+                if (song != null)
+                    SongDetail(song)
             }
         }
     }
