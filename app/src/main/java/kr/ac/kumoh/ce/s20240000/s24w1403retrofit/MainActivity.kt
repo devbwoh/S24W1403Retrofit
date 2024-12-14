@@ -9,14 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -66,7 +74,18 @@ fun MainScreen() {
         },
         gesturesEnabled = true,
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = { TopBar(drawerState) },
+            bottomBar = {
+                BottomNavigationBar {
+                    navController.navigate(it) {
+                        launchSingleTop = true
+                        popUpTo(it) { inclusive = true }
+                    }
+                }
+            },
+        ) { innerPadding ->
             NavHost(
                 navController = navController,
                 //startDestination = SongScreen.Singer.name,
@@ -138,6 +157,70 @@ fun DrawerSheet(
                     Icons.Filled.Favorite,
                     contentDescription = "노래 리스트 아이콘"
                 )
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(drawerState: DrawerState) {
+    val scope = rememberCoroutineScope()
+
+    CenterAlignedTopAppBar(
+        title = { Text("노래 정보") },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "메뉴 아이콘"
+                )
+            }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+    )
+}
+
+@Composable
+fun BottomNavigationBar(onNavigate: (String) -> Unit) {
+    NavigationBar {
+        NavigationBarItem(
+            label = {
+                Text("가수")
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Face,
+                    contentDescription = "가수 리스트 아이콘"
+                )
+            },
+            selected = false,
+            onClick = {
+                onNavigate(SongScreen.Singer.name)
+            }
+        )
+        NavigationBarItem(
+            label = {
+                Text("노래")
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = "노래 리스트 아이콘"
+                )
+            },
+            selected = false,
+            onClick = {
+                onNavigate(SongScreen.Song.name)
             }
         )
     }
