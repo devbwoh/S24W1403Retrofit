@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "kr.ac.kumoh.ce.s20240000.s24w1403retrofit"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+
+    // Note: Navigation 사용하기 위해 추가
+    //implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation(libs.androidx.navigation.compose)
 
     // NOTE: AsyncImage 사용하기 위해 추가
     //implementation("io.coil-kt.coil3:coil-compose:3.0.4")
