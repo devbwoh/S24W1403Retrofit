@@ -21,4 +21,4 @@ https://nano5.notion.site/Week15-03-Song-Detail-149daf211d428061925fc23469a3178e
 
 ![image](https://github.com/user-attachments/assets/d704a99f-20e3-4bc5-b466-806a84f28d9d)
 
-![image](https://github.com/user-attachments/assets/1d84a12b-a561-4596-8081-554f8ff0d811)
+![image](https://github.com/user-attachments/assets/fcbbcc47-1892-4cab-808e-ad6d178d3ffc)
